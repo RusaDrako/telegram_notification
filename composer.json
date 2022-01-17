@@ -1,0 +1,23 @@
+{
+    "name": "rusadrako/telegram_notification",
+    "description": "Опопещения в телеграмм",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Petukhov Leonid",
+            "email": "rusadrako@yandex.ru"
+        }
+    ],
+    "require": {
+        "php": ">=7.0.0"
+    },
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": {
+            "RusaDrako\\telegram_notification\\": "src"
+        },
+        "files": [
+            "src/autoload.php"
+        ]
+    }
+}

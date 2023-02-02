@@ -3,7 +3,7 @@
 namespace RusaDrako\telegram_notification;
 
 /**
- *
+ * Отправка сообщений в Telegram
  */
 class telegram {
 
@@ -33,7 +33,7 @@ class telegram {
 
 
 	/**
-	 * Задаёт токен telegram-bot
+	 * Устанавливает токен telegram-bot
 	 * @param string $value Токен
 	 * @return void
 	 */
@@ -46,7 +46,7 @@ class telegram {
 
 
 	/**
-	 * Задаёт маркер сообщений (текстовая составляющая перед основным сообщением)
+	 * Устанавливает маркер бота (текстовая составляющая перед основным сообщением)
 	 * @param string $value Маркер
 	 * @return void
 	 */
@@ -59,6 +59,7 @@ class telegram {
 
 
 	/**
+	 * Устанавливает время ожидания ответа
 	 * @param int $value
 	 * @return void
 	 */
@@ -100,7 +101,7 @@ class telegram {
 
 
 	/**
-	 * Выполнентие команды
+	 * Выполняет команду
 	 * @param string $command Команда
 	 * @param array $post Массив настроек
 	 * @return array|mixed
@@ -169,7 +170,7 @@ class telegram {
 
 
 	/**
-	 * Разбиваем сообщение на массив (для отправки длинных сообщений)
+	 * Разбивает сообщение на массив (для отправки длинных сообщений)
 	 * @param string $str_msg
 	 * @return array
 	 */
@@ -201,7 +202,7 @@ class telegram {
 
 
 	/**
-	 * Отправка сообщения
+	 * Отправляет сообщение
 	 * @param string|array $to Спмсок адресатов (ID)
 	 * @param string $text Текст сообщения
 	 * @return void

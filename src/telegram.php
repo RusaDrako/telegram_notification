@@ -7,23 +7,36 @@ namespace RusaDrako\telegram_notification;
  */
 class telegram {
 
+	/**
+	 * @var string Ссылка для обращения к Telegram
+	 */
 	private $link = 'https://api.telegram.org/bot';
+	/**
+	 * @var string Токен бота
+	 */
 	private $token = null;
+	/**
+	 * @var string Маркер сообщений (для визуального понимания, откуда пришло сообщение)
+	 */
 	private $marker = '';
+	/**
+	 * @var string Время ожидания ответа
+	 */
 	private $timeout = 10;
+	/**
+ 	 * @var bool Тестовый режим (команды не отправляются)
+	 */
+	private $test = false;
 
 
 
 
 
-	/** */
-	public function __construct() {}
-
-
-
-
-
-	/** */
+	/**
+	 * Задаёт токен telegram-bot
+	 * @param string $value Токен
+	 * @return void
+	 */
 	public function set_token(string $value) {
 		$this->token = $value;
 	}
@@ -32,7 +45,11 @@ class telegram {
 
 
 
-	/** */
+	/**
+	 * Задаёт маркер сообщений (текстовая составляющая перед основным сообщением)
+	 * @param string $value Маркер
+	 * @return void
+	 */
 	public function set_marker(string $value) {
 		$this->marker = $value;
 	}
@@ -41,7 +58,10 @@ class telegram {
 
 
 
-	/** */
+	/**
+	 * @param int $value
+	 * @return void
+	 */
 	public function set_timeout(int $value) {
 		$this->timeout = $value;
 	}
@@ -50,8 +70,47 @@ class telegram {
 
 
 
-	/** */
-	private function _curl($command, $post = []) {
+	/**
+	 * Выводит информацию о команде в тестовом режиме
+	 * @param string $command Команда
+	 * @param array $post Массив настроек
+	 * @return void
+	 */
+	protected function _test_view($command, $post) {
+		echo "<hr> Команда в Telegram: $command";
+		var_dump($post);
+		echo '<hr>';
+	}
+
+
+
+
+
+	/**
+	 * Выводит информацию об ошибке
+	 * @param string $text Текст сообщения
+	 * @return void
+	 */
+	protected function _error_view($text) {
+		echo "Ошибка curl: {$text}";
+	}
+
+
+
+
+
+	/**
+	 * Выполнентие команды
+	 * @param string $command Команда
+	 * @param array $post Массив настроек
+	 * @return array|mixed
+	 */
+	protected function _curl($command, $post = []) {
+		# Если тестовый режим
+		if ($this->test) {
+			$this->_test_view($command, $post);
+			return [];
+		}
 		# Запускай curl
 		$curl = curl_init();
 		# Выполняем настройки
@@ -70,7 +129,7 @@ class telegram {
 		# Если curl выдал ошибку
 		if ($result === false) {
 			# Выводим сообщение
-			echo 'Ошибка curl: ' . curl_error($curl);
+			$this->_error_view(curl_error($curl));
 			# Закрываем соединение
 			curl_close($curl);
 			return [];
@@ -91,8 +150,13 @@ class telegram {
 
 
 
-	/** */
-	private function _get_to_id_arr($to) {
+	/**
+	 * Возвращает строковый список получателей в виде массива
+	 * @param string|array $to Строковый список получателей
+	 * @return false|string[]
+	 */
+	private function _get_arr_id_to($to) {
+		if (is_array($to)) { return $to; }
 		$arr_to = \explode(',', $to);
 		foreach ($arr_to as $k => $v) {
 			$arr_to[$k] = trim($v);
@@ -104,8 +168,12 @@ class telegram {
 
 
 
-	/** Разбиваем сообщение на массив части */
-	private function _send_msg___arr_sub_str($str_msg) {
+	/**
+	 * Разбиваем сообщение на массив (для отправки длинных сообщений)
+	 * @param string $str_msg
+	 * @return array
+	 */
+	private function _split_msg($str_msg) {
 		# Максимальная динна
 		$max_len = 4096;
 		# Длинна строки
@@ -132,16 +200,21 @@ class telegram {
 
 
 
-	/** Отправка сообщения */
-	function send($to, string $text) {
+	/**
+	 * Отправка сообщения
+	 * @param string|array $to Спмсок адресатов (ID)
+	 * @param string $text Текст сообщения
+	 * @return void
+	 */
+	public function send($to, string $text) {
 		if ($this->marker) {
-			$text = "{$this->marker}: $text";
+			$text = "{$this->marker}: {$text}";
 		}
 
 		$post = [];
 
-		$arr_to = $this->_get_to_id_arr($to);
-		$arr_text = $this->_send_msg___arr_sub_str($text);
+		$arr_to = $this->_get_arr_id_to($to);
+		$arr_text = $this->_split_msg($text);
 
 		foreach ($arr_to as $v) {
 			$post['chat_id'] = $v;

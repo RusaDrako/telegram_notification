@@ -24,7 +24,7 @@ class telegram {
 	 */
 	private $timeout = 10;
 	/**
- 	 * @var bool Тестовый режим (команды не отправляются)
+ 	 * @var bool Тестовый режим (команды не отправляются, а выводятся на экран)
 	 */
 	private $test = false;
 

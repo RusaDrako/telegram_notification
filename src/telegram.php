@@ -10,23 +10,23 @@ class telegram {
 	/**
 	 * @var string Ссылка для обращения к Telegram
 	 */
-	private $link = 'https://api.telegram.org/bot';
+	protected $link = 'https://api.telegram.org/bot';
 	/**
 	 * @var string Токен бота
 	 */
-	private $token = null;
+	protected $token = null;
 	/**
 	 * @var string Маркер сообщений (для визуального понимания, откуда пришло сообщение)
 	 */
-	private $marker = '';
+	protected $marker = '';
 	/**
 	 * @var string Время ожидания ответа
 	 */
-	private $timeout = 10;
+	protected $timeout = 10;
 	/**
  	 * @var bool Тестовый режим (команды не отправляются, а выводятся на экран)
 	 */
-	private $test = false;
+	protected $test = false;
 
 
 

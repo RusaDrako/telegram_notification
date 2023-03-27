@@ -107,30 +107,36 @@ class telegram {
 	 * @return array|mixed
 	 */
 	protected function _curl($command, $post = []) {
-		# Если тестовый режим
-		if ($this->test) {
-			$this->_test_view($command, $post);
-			return [];
-		}
 		# Запускай curl
 		$curl = curl_init();
+		# Формируем
+		$array_curl_set = [
+			CURLOPT_URL              => $this->link . $this->token . '/' . $command,
+			CURLOPT_POST             => TRUE,
+			CURLOPT_RETURNTRANSFER   => TRUE,
+			CURLOPT_TIMEOUT          => $this->timeout,
+			CURLOPT_POSTFIELDS       => $post,
+		];
+		# Проверяем отправляется ли файл
+		foreach ($post as $v) {
+			if (is_object($v)) {
+				if (get_class($v) == 'CURLFile') {
+					$array_curl_set[CURLOPT_HTTPHEADER] = ['Content-Type:multipart/form-data'];
+					break;
+				}
+			}
+		}
 		# Выполняем настройки
 		curl_setopt_array(
 			$curl,
-			[
-				CURLOPT_URL              => $this->link . $this->token . '/' . $command,
-				CURLOPT_POST             => TRUE,
-				CURLOPT_RETURNTRANSFER   => TRUE,
-				CURLOPT_TIMEOUT          => $this->timeout,
-				CURLOPT_POSTFIELDS       => $post,
-			]
+			$array_curl_set
 		);
 		# Выполняем curl
 		$result = curl_exec($curl);
 		# Если curl выдал ошибку
 		if ($result === false) {
 			# Выводим сообщение
-			$this->_error_view(curl_error($curl));
+			echo 'Ошибка curl: ' . curl_error($curl);
 			# Закрываем соединение
 			curl_close($curl);
 			return [];

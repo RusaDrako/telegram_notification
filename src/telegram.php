@@ -30,8 +30,6 @@ class telegram {
 
 
 
-
-
 	/**
 	 * Устанавливает токен telegram-bot
 	 * @param string $value Токен
@@ -40,8 +38,6 @@ class telegram {
 	public function set_token(string $value) {
 		$this->token = $value;
 	}
-
-
 
 
 
@@ -56,8 +52,6 @@ class telegram {
 
 
 
-
-
 	/**
 	 * Устанавливает время ожидания ответа
 	 * @param int $value
@@ -66,8 +60,6 @@ class telegram {
 	public function set_timeout(int $value) {
 		$this->timeout = $value;
 	}
-
-
 
 
 
@@ -85,8 +77,6 @@ class telegram {
 
 
 
-
-
 	/**
 	 * Выводит информацию об ошибке
 	 * @param string $text Текст сообщения
@@ -95,8 +85,6 @@ class telegram {
 	protected function _error_view($text) {
 		echo "Ошибка curl: {$text}";
 	}
-
-
 
 
 
@@ -155,14 +143,12 @@ class telegram {
 
 
 
-
-
 	/**
 	 * Возвращает строковый список получателей в виде массива
 	 * @param string|array $to Строковый список получателей
 	 * @return false|string[]
 	 */
-	private function _get_arr_id_to($to) {
+	protected function _get_arr_id_to($to) {
 		if (is_array($to)) { return $to; }
 		$arr_to = \explode(',', $to);
 		foreach ($arr_to as $k => $v) {
@@ -173,14 +159,12 @@ class telegram {
 
 
 
-
-
 	/**
 	 * Разбивает сообщение на массив (для отправки длинных сообщений)
 	 * @param string $str_msg
 	 * @return array
 	 */
-	private function _split_msg($str_msg) {
+	protected function _split_msg($str_msg) {
 		# Максимальная динна
 		$max_len = 4096;
 		# Длинна строки
@@ -204,6 +188,11 @@ class telegram {
 	}
 
 
+
+	/** Получение данных файла */
+	protected function _get_file_data($file_path) {
+		return new \CURLFile(realpath($file_path));
+	}
 
 
 
@@ -233,6 +222,29 @@ class telegram {
 	}
 
 
+
+	/** Отправка фотографии (с сервера) */
+	function sendPhoto($to, string $file_path, string $text) {
+		if ($this->marker) {
+			$text = "{$this->marker}: $text";
+		}
+
+		$post = [];
+
+		$arr_to = $this->_get_arr_id_to($to);
+		$arr_text = $this->_split_msg($text);
+		$post['photo'] = $this->_get_file_data($file_path);
+		$post['parse_mode'] = 'Markdown';
+
+		foreach ($arr_to as $v) {
+			$post['chat_id'] = $v;
+			foreach ($arr_text as $v_text) {
+				$post['caption'] = $v_text;
+				$result[] = $this->_curl('sendPhoto', $post);
+			}
+		}
+		return $result;
+	}
 
 
 

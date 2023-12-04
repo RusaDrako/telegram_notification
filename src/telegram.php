@@ -28,8 +28,6 @@ class telegram {
 	 */
 	protected $test = false;
 
-
-
 	/**
 	 * Устанавливает токен telegram-bot
 	 * @param string $value Токен
@@ -38,8 +36,6 @@ class telegram {
 	public function set_token(string $value) {
 		$this->token = $value;
 	}
-
-
 
 	/**
 	 * Устанавливает маркер бота (текстовая составляющая перед основным сообщением)
@@ -50,8 +46,6 @@ class telegram {
 		$this->marker = $value;
 	}
 
-
-
 	/**
 	 * Устанавливает время ожидания ответа
 	 * @param int $value
@@ -60,8 +54,6 @@ class telegram {
 	public function set_timeout(int $value) {
 		$this->timeout = $value;
 	}
-
-
 
 	/**
 	 * Выводит информацию о команде в тестовом режиме
@@ -75,8 +67,6 @@ class telegram {
 		echo '<hr>';
 	}
 
-
-
 	/**
 	 * Выводит информацию об ошибке
 	 * @param string $text Текст сообщения
@@ -85,8 +75,6 @@ class telegram {
 	protected function _error_view($text) {
 		echo "Ошибка curl: {$text}";
 	}
-
-
 
 	/**
 	 * Выполняет команду
@@ -141,8 +129,6 @@ class telegram {
 		return $arr_result;
 	}
 
-
-
 	/**
 	 * Возвращает строковый список получателей в виде массива
 	 * @param string|array $to Строковый список получателей
@@ -156,8 +142,6 @@ class telegram {
 		}
 		return $arr_to;
 	}
-
-
 
 	/**
 	 * Разбивает сообщение на массив (для отправки длинных сообщений)
@@ -187,14 +171,10 @@ class telegram {
 		return $arr;
 	}
 
-
-
 	/** Получение данных файла */
 	protected function _get_file_data($file_path) {
 		return new \CURLFile(realpath($file_path));
 	}
-
-
 
 	/**
 	 * Отправляет сообщение
@@ -221,8 +201,6 @@ class telegram {
 		}
 	}
 
-
-
 	/** Отправка фотографии (с сервера) */
 	function sendPhoto($to, string $file_path, string $text) {
 		if ($this->marker) {
@@ -245,8 +223,6 @@ class telegram {
 		}
 		return $result;
 	}
-
-
 
 /**/
 }

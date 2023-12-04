@@ -1,5 +1,5 @@
 # telegram_notification
-Отправка сообщений в телеграмм
+Простые оповещения в телеграмм-бот
 
 [![Version](http://poser.pugx.org/rusadrako/telegram_notification/version)](https://packagist.org/packages/rusadrako/telegram_notification)
 [![Total Downloads](http://poser.pugx.org/rusadrako/telegram_notification/downloads)](https://packagist.org/packages/rusadrako/telegram_notification/stats)
@@ -24,17 +24,25 @@ require_once('/telegram_notification/src/autoload.php')
 ```php
 use RusaDrako\telegram_notification\telegram;
 
-$bot_token = '...';
+$token = 'botToken'; // токен телеграм-бота
+$options = [];
 
-$tn = new telegram();
-$tn->set_token($bot_token);
+$tn = new telegram($token, $options);
 ```
 или
 ```php
-$bot_token = '...';
+$token = 'botToken'; // токен телеграм-бота
+$options = [];
 
-$tn = new telegram_note();
-$tn->set_token($bot_token);
+$tn = new telegram_note($token, $options);
+```
+
+Доступные свойств:
+```php
+$options = [
+    'timeout' => 15, // время ожидания ответа от сервиса в секундах
+    'marker' => 'Сервисное сообщение с test.ru: ', // маркер сообщений
+];
 ```
 
 
@@ -51,6 +59,29 @@ $tn->send($chat_id, $message);
 - **$message** - Текст сообщения
 
 
+#### Метод sendPhoto()
+Отправлят сообщения с картинкой
+```php
+$chat_id = 'USER_ID';
+$file_path = __DIR__.'/test.jpg';
+$message = 'test message';
+
+/** @var RusaDrako\telegram_notification\telegram $tn */
+$tn->sendPhoto($chat_id, $file_path, $message);
+```
+- **$chat_id** - ID пользователя, которому отправляется сообщение
+- **$file_path** - Путь к файлу
+- **$message** - Текст сообщения
+
+
+#### Метод set_token()
+Устанавливает токен телеграм-бота.
+```php
+/** @var RusaDrako\telegram_notification\telegram $tn */
+$tn->set_token('...');
+```
+
+
 #### Метод set_timeout()
 Устанавливает время ожидания ответа от сервиса в секундах.
 ```php
@@ -60,10 +91,18 @@ $tn->set_timeout(15);
 
 
 #### Метод set_marker()
-Устанавливает маркер сообщений - добавляется в начало сообщения.
+Устанавливает маркер сообщений - добавляется перед текстом в сообщения.
 ```php
 /** @var RusaDrako\telegram_notification\telegram $tn */
 $tn->set_marker('-->');
+```
+
+
+#### Метод set_timeout()
+Устанавливает время ожидания ответа от сервиса в секундах.
+```php
+/** @var RusaDrako\telegram_notification\telegram $tn */
+$tn->set_timeout(15);
 ```
 
 

@@ -7,26 +7,20 @@ namespace RusaDrako\telegram_notification;
  */
 class telegram {
 
-	/**
-	 * @var string Ссылка для обращения к Telegram
-	 */
+	/** @var string Ссылка для обращения к Telegram */
 	protected $link = 'https://api.telegram.org/bot';
-	/**
-	 * @var string Токен бота
-	 */
+	/** @var string Токен бота */
 	protected $token = null;
-	/**
-	 * @var string Маркер сообщений (для визуального понимания, откуда пришло сообщение)
-	 */
+	/** @var string Маркер сообщений (для визуального понимания, откуда пришло сообщение) */
 	protected $marker = '';
-	/**
-	 * @var string Время ожидания ответа
-	 */
+	/** @var string Время ожидания ответа */
 	protected $timeout = 10;
-	/**
- 	 * @var bool Тестовый режим (команды не отправляются, а выводятся на экран)
-	 */
-	protected $test = false;
+
+	public function __construct($token, $options = []){
+		$this->set_token($token);
+		$this->set_marker($options['marker'] ?? null);
+		$this->set_timeout((int)$options['timeout'] ?? null);
+	}
 
 	/**
 	 * Устанавливает токен telegram-bot
@@ -53,18 +47,6 @@ class telegram {
 	 */
 	public function set_timeout(int $value) {
 		$this->timeout = $value;
-	}
-
-	/**
-	 * Выводит информацию о команде в тестовом режиме
-	 * @param string $command Команда
-	 * @param array $post Массив настроек
-	 * @return void
-	 */
-	protected function _test_view($command, $post) {
-		echo "<hr> Команда в Telegram: $command";
-		var_dump($post);
-		echo '<hr>';
 	}
 
 	/**
@@ -179,18 +161,18 @@ class telegram {
 	/**
 	 * Отправляет сообщение
 	 * @param string|array $to Спмсок адресатов (ID)
-	 * @param string $text Текст сообщения
+	 * @param string $message Текст сообщения
 	 * @return void
 	 */
-	public function send($to, string $text) {
+	public function send($to, string $message) {
 		if ($this->marker) {
-			$text = "{$this->marker}: {$text}";
+			$message = "{$this->marker}: {$message}";
 		}
 
 		$post = [];
 
 		$arr_to = $this->_get_arr_id_to($to);
-		$arr_text = $this->_split_msg($text);
+		$arr_text = $this->_split_msg($message);
 
 		foreach ($arr_to as $v) {
 			$post['chat_id'] = $v;
@@ -202,15 +184,15 @@ class telegram {
 	}
 
 	/** Отправка фотографии (с сервера) */
-	function sendPhoto($to, string $file_path, string $text) {
+	function sendPhoto($to, string $file_path, string $message) {
 		if ($this->marker) {
-			$text = "{$this->marker}: $text";
+			$message = "{$this->marker}: $message";
 		}
 
 		$post = [];
 
 		$arr_to = $this->_get_arr_id_to($to);
-		$arr_text = $this->_split_msg($text);
+		$arr_text = $this->_split_msg($message);
 		$post['photo'] = $this->_get_file_data($file_path);
 		$post['parse_mode'] = 'Markdown';
 

@@ -5,21 +5,21 @@ namespace RusaDrako\telegram_notification;
 /**
  * Отправка сообщений в Telegram
  */
-class telegram {
+class Bot {
 
 	/** @var string Ссылка для обращения к Telegram */
 	protected $link = 'https://api.telegram.org/bot';
 	/** @var string Токен бота */
-	protected $token = null;
+	protected $token;
 	/** @var string Маркер сообщений (для визуального понимания, откуда пришло сообщение) */
-	protected $marker = '';
+	protected $marker;
 	/** @var string Время ожидания ответа */
-	protected $timeout = 10;
+	protected $timeout;
 
 	public function __construct($token, $options = []){
 		$this->set_token($token);
-		$this->set_marker($options['marker'] ?? null);
-		$this->set_timeout((int)$options['timeout'] ?? null);
+		$this->set_marker($options['marker'] ?? '');
+		$this->set_timeout((int)$options['timeout'] ?? 10);
 	}
 
 	/**

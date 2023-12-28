@@ -15,6 +15,7 @@ class Bilder
 	public function delete(Bot $bot) {
 		foreach($this->bot as $k => $v) {
 			if ($v === $bot) {
+				$bot->set_token('');
 				unset($this->bot[$k]);
 				continue;
 			}

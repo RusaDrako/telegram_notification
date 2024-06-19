@@ -144,8 +144,8 @@ class Bot {
 			$len_control = $str_len - $i * $max_len;
 			# Определяем длинну отрезка
 			$_len = $len_control < $max_len
-					? $len_control
-					: $max_len;
+				? $len_control
+				: $max_len;
 			# Добавляем элемент в массив
 			$arr[] = \mb_substr($str_msg, $i * $max_len, $_len);
 		}
@@ -178,9 +178,10 @@ class Bot {
 			$post['chat_id'] = $v;
 			foreach ($arr_text as $v_text) {
 				$post['text'] = $v_text;
-				$result = $this->_curl('sendMessage', $post);
+				$result[] = $this->_curl('sendMessage', $post);
 			}
 		}
+		return $result;
 	}
 
 	/** Отправка фотографии (с сервера) */

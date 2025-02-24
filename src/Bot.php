@@ -19,7 +19,7 @@ class Bot {
 	public function __construct($token, $options = []){
 		$this->set_token($token);
 		$this->set_marker($options['marker'] ?? '');
-		$this->set_timeout((int)$options['timeout'] ?? 10);
+		$this->set_timeout((int)($options['timeout'] ?? 10));
 	}
 
 	/**
